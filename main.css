@@ -1,0 +1,169 @@
+* {
+  box-sizing: border-box;
+}
+
+#board {
+  display: grid;
+  width: 80vh;
+  height: 80vh;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  outline: 5px solid black;
+}
+
+.tile {
+  position: relative;
+}
+
+.bg-white {
+  background-color: white;
+  position: relative;
+}
+
+.bg-black {
+  background-color: black;
+  position: relative;
+}
+
+.marked {
+  background-color: blue;
+  position: relative;
+}
+
+.piece {
+  border-radius: 50%;
+  border: 3px solid gray;
+  height: 3rem;
+  width: 3rem;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 50%;
+  cursor: pointer;
+}
+
+.tile {
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.close-button {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #2c3e50;
+  transition: all 0.3s ease;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.close-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+  transform: rotate(90deg);
+}
+
+#resignBtn {
+  background: linear-gradient(145deg, #fd7777, #cc0000);
+}
+
+#resignBtn:hover {
+  background: linear-gradient(145deg, #cc0000, #f16767);
+}
+
+#drawBtn {
+  background: linear-gradient(145deg, #5ab7f6, #2980b9);
+}
+
+#drawBtn:hover {
+  background: linear-gradient(145deg, #40a0e0, #3498db);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  /* Frosted glass effect */
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #ffffff, #f5f5f5);
+  padding: 30px 40px;
+  border-radius: 15px;
+  text-align: center;
+  min-width: 300px;
+  position: relative;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  transform: scale(0.9);
+}
+.modal-buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.modal-buttons button {
+  padding: 10px 25px;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  border-radius: 25px;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.modal-buttons button:first-child {
+  background: linear-gradient(145deg, #4caf50, #45a049);
+}
+
+.modal-buttons button:last-child {
+  background: linear-gradient(145deg, #ff4444, #cc0000);
+}
+
+.modal-buttons button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-buttons button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.king {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
+.king:after {
+  content: "♔";
+  color: red;
+}

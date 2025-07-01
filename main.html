@@ -1,0 +1,51 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="./main.css" />
+  </head>
+  <body>
+    <div class="game-controls">
+      <button id="resignBtn">Resign</button>
+      <button id="drawBtn">Offer Draw</button>
+    </div>
+    <div id="board"></div>
+    <div id="score">
+      Whites :
+      <p id="white_score">12</p>
+      Blacks :
+      <p id="black_score">12</p>
+    </div>
+    <div id="resignModal" class="modal">
+      <div class="modal-content">
+        <p>Are you sure you want to resign?</p>
+        <div class="modal-buttons">
+          <button id="resignYesBtn">Yes</button>
+          <button id="resignNoBtn">No</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="drawModal" class="modal">
+      <div class="modal-content">
+        <p id="drawMessage"></p>
+        <div class="modal-buttons">
+          <button id="drawYesBtn">Accept</button>
+          <button id="drawNoBtn">Decline</button>
+        </div>
+      </div>
+    </div>
+    <div id="noMovesModal" class="modal">
+      <div class="modal-content">
+        <p id="noMovesMessage"></p>
+        <button onclick="hideModal('noMovesModal')">OK</button>
+      </div>
+    </div>
+
+    <div id="winnerModal" class="modal">
+      <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <p id="winnerMessage"></p>
+      </div>
+    </div>
+    <script src="./main.js"></script>
+  </body>
+</html>
