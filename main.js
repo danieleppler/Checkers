@@ -22,23 +22,45 @@ class Game {
     this.initGame();
   }
 
+  ConvertCharToPiece(locationId, pieceId, color) {
+    const piece = document.createElement("div");
+    piece.id = (color == "white" ? "wp" : "bp") + pieceId;
+    piece.className = (color == "white" ? "bg-white" : "bg-black") + " piece";
+    this.board.children[locationId].appendChild(piece);
+  }
+
   initPieces() {
     let blackCounter = 0;
     let whiteCounter = 0;
+
+    // prettier-ignore
+    {
+         //full board
+    /*["","w","","w","","w","","w",
+                        "w","","w","","w","","w","",
+                        "","w","","w","","w","","w",
+                        '','','','','','','','',
+                        '','','','','','','','',
+                        'b','','b','','b','','b','',
+                        '','b','','b','','b','','b',
+                        'b','','b','','b','','b','',
+    ];*/
+    var boardAsString = ["","w","","w","","w","","w",
+                        "w","","w","","w","","w","",
+                        "","w","","w","","w","","w",
+                        '','','','','','','','',
+                        '','','','','','','','',
+                        'b','','b','','b','','b','',
+                        '','b','','b','','b','','b',
+                        'b','','b','','b','','b','',
+    ]
+    }
+
     for (let i = 0; i < 64; i++) {
-      if (i <= 23 && this.board.children[i].classList.contains("bg-black")) {
-        const white_piece = document.createElement("div");
-        white_piece.id = "wp" + whiteCounter++;
-        white_piece.className = "bg-white piece";
-        this.board.children[i].appendChild(white_piece);
-      } else if (
-        i >= 40 &&
-        this.board.children[i].classList.contains("bg-black")
-      ) {
-        const black_piece = document.createElement("div");
-        black_piece.id = "bp" + blackCounter++;
-        black_piece.className = "bg-black piece";
-        this.board.children[i].appendChild(black_piece);
+      if (boardAsString[i] == "w") {
+        this.ConvertCharToPiece(i, whiteCounter++, "white");
+      } else if (boardAsString[i] == "b") {
+        this.ConvertCharToPiece(i, blackCounter++, "black");
       }
     }
   }
@@ -82,14 +104,14 @@ class Game {
 
   handleDrawAccept() {
     // First properly clean up the draw modal and its overlay
-    this.hideModal("drawModal");
+    hideModal("drawModal");
     // Then show the winner modal with a fresh overlay
     this.showModal("winnerModal", "Game Drawn by Agreement!");
     this.resetGame();
   }
 
   handleDrawDecline() {
-    this.hideModal("drawModal");
+    hideModal("drawModal");
     // No alert needed, just continue the game
   }
   handleResignClick() {
@@ -97,14 +119,14 @@ class Game {
   }
 
   handleResignConfirm() {
-    this.hideModal("resignModal");
-    const winner = this.BlackTurn ? "Black" : "White";
+    hideModal("resignModal");
+    const winner = this.BlackTurn ? "White" : "Black";
     const loser = this.BlackTurn ? "Black" : "White";
     this.showModal("winnerModal", `${winner} Wins! ${loser} resigned.`);
   }
 
   handleResignCancel() {
-    this.hideModal("resignModal");
+    hideModal("resignModal");
   }
 
   handleDrawClick() {
@@ -114,17 +136,6 @@ class Game {
       "drawModal",
       `${otherPlayer}, ${currentPlayer} offers a draw. Do you accept?`
     );
-  }
-
-  hideModal(modalId) {
-    const modal = document.getElementById(modalId);
-    modal.style.display = "none";
-
-    // Remove any existing overlays
-    const existingOverlays = document.querySelectorAll(".modal-overlay");
-    existingOverlays.forEach((overlay) => overlay.remove());
-
-    this.currentOverlay = null;
   }
 
   showModal(modalId, message) {
@@ -142,7 +153,7 @@ class Game {
       const closeButton = modal.querySelector(".close-button");
       if (closeButton) {
         closeButton.onclick = () => {
-          this.hideModal(modalId);
+          hideModal(modalId);
           this.resetGame();
         };
       }
@@ -225,7 +236,6 @@ class Game {
       let parent = this.curr_piece_to_move.parentNode;
       parent.removeChild(this.curr_piece_to_move);
       this.DeselectTiles();
-
       return true;
     }
     if (
@@ -294,29 +304,41 @@ class Game {
   }
 
   checkForLegalMove() {
-    let player = this.BlackTurn ? "bg-black" : "bg-white";
+    let player = this.BlackTurn ? "black" : "white";
     let opponent = this.BlackTurn ? "white" : "black";
     let HasLegalMove = false;
     for (let i = 0; i < 64; i++) {
       if (
         this.board.children[i].children.length > 0 &&
-        this.board.children[i].children[0].classList.contains(player)
+        this.board.children[i].children[0].classList.contains("bg-" + player)
       ) {
         let row = Math.floor(i / 8);
         let col = i % 8;
         if (
-          this.IsAbleToCaptureDownLeft(opponent, row, col) ||
-          this.isAbleToMoveDownLeft(row, col) ||
-          this.IsAbleToCaptureDownRight(opponent, row, col) ||
-          this.isAbleToMoveDownRight(row, col) ||
-          this.IsAbleToCaptureUpLeft(opponent, row, col) ||
-          this.isAbleToMoveUpLeft(row, col) ||
-          this.isAbleToMoveUpRight(opponent, row, col) ||
-          this.IsAbleToCaptureUpRight(row, col)
-        ) {
-          HasLegalMove = true;
-          break;
-        }
+          player == "black" ||
+          this.board.children[i].children[0].classList.contains("king")
+        )
+          if (
+            this.IsAbleToCaptureUpLeft(opponent, row, col) ||
+            this.isAbleToMoveUpLeft(row, col) ||
+            this.isAbleToMoveUpRight(row, col) ||
+            this.IsAbleToCaptureUpRight(opponent, row, col)
+          ) {
+            HasLegalMove = true;
+          }
+        if (
+          (!HasLegalMove && player == "white") ||
+          this.board.children[i].children[0].classList.contains("king")
+        )
+          if (
+            this.IsAbleToCaptureDownLeft(opponent, row, col) ||
+            this.isAbleToMoveDownLeft(row, col) ||
+            this.IsAbleToCaptureDownRight(opponent, row, col) ||
+            this.isAbleToMoveDownRight(row, col)
+          ) {
+            HasLegalMove = true;
+          }
+        if (HasLegalMove) break;
       }
     }
     if (!HasLegalMove) {
@@ -524,7 +546,7 @@ class Game {
         opponent,
         row + direction * 2,
         col - 2,
-        this.board.children[(row + direction * 2) * 8 + (col - 2)]
+        this.board.children[(row + direction * 2) * 8 + (col - 2)].id
       );
     }
     if (
@@ -549,7 +571,7 @@ class Game {
         opponent,
         row + direction * 2,
         col + 2,
-        this.board.children[(row + direction * 2) * 8 + (col + 2)]
+        this.board.children[(row + direction * 2) * 8 + (col + 2)].id
       );
     }
   }
@@ -566,13 +588,13 @@ class Game {
         ) {
           this.MarkTile((row - 2) * 8 + (col + 2));
           let idx = this.curr_threatned_pieces.findIndex((x) =>
-            x.targets.includes(LastTarget)
+            x.targets.map((x) => x.id).includes(LastTarget.toString())
           );
           if (idx == -1) {
             idx = 0;
             this.curr_threatned_pieces[idx] = { targets: [], pieces: [] };
           }
-          LastTarget = this.board.children[(row - 2) * 8 + (col + 2)];
+          LastTarget = this.board.children[(row - 2) * 8 + (col + 2)].id;
           this.curr_threatned_pieces[idx].targets.push(
             this.board.children[(row - 2) * 8 + (col + 2)]
           );
@@ -594,13 +616,13 @@ class Game {
         ) {
           this.MarkTile((row - 2) * 8 + (col - 2));
           let idx = this.curr_threatned_pieces.findIndex((x) =>
-            x.targets.includes(LastTarget)
+            x.targets.map((x) => x.id).includes(LastTarget.toString())
           );
           if (idx == -1) {
             idx = 0;
             this.curr_threatned_pieces[idx] = { targets: [], pieces: [] };
           }
-          LastTarget = this.board.children[(row - 2) * 8 + (col - 2)];
+          LastTarget = this.board.children[(row - 2) * 8 + (col - 2)].id;
           this.curr_threatned_pieces[idx].targets.push(
             this.board.children[(row - 2) * 8 + (col - 2)]
           );
@@ -621,10 +643,10 @@ class Game {
         ) {
           this.MarkTile((row + 2) * 8 + (col + 2));
           let idx = this.curr_threatned_pieces.findIndex((x) =>
-            x.targets.includes(LastTarget)
+            x.targets.map((x) => x.id).includes(LastTarget.toString())
           );
           if (idx == -1) {
-            LastTarget = this.board.children[(row + 2) * 8 + (col + 2)];
+            LastTarget = this.board.children[(row + 2) * 8 + (col + 2)].id;
             idx = 0;
             this.curr_threatned_pieces[idx] = { targets: [], pieces: [] };
           }
@@ -648,10 +670,10 @@ class Game {
         ) {
           this.MarkTile((row + 2) * 8 + (col - 2));
           let idx = this.curr_threatned_pieces.findIndex((x) =>
-            x.targets.includes(LastTarget)
+            x.targets.map((x) => x.id).includes(LastTarget.toString())
           );
           if (idx == -1) {
-            LastTarget = this.board.children[(row + 2) * 8 + (col - 2)];
+            LastTarget = this.board.children[(row + 2) * 8 + (col - 2)].id;
             idx = 0;
             this.curr_threatned_pieces[idx] = { targets: [], pieces: [] };
           }
@@ -864,9 +886,9 @@ class Game {
                 this.curr_piece_to_move.id &&
               !this.IsAbleToDoubleCapture(
                 opponent,
-                row + 2,
-                col - 2,
-                targetTile
+                Math.floor(idx / 8),
+                idx % 8,
+                (Math.floor(idx / 8) * idx) % 8
               )
             )
               return -1;
@@ -940,3 +962,14 @@ class Game {
 window.addEventListener("load", () => {
   new Game();
 });
+
+function hideModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = "none";
+
+  // Remove any existing overlays
+  const existingOverlays = document.querySelectorAll(".modal-overlay");
+  existingOverlays.forEach((overlay) => overlay.remove());
+
+  this.currentOverlay = null;
+}

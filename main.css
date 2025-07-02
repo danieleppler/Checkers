@@ -164,6 +164,14 @@
 }
 
 .king:after {
-  content: "♔";
+  content: "K";
   color: red;
+}
+
+#score {
+  background-color: beige;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: row;
+  width: 10%;
 }
